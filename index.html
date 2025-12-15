@@ -1,245 +1,1037 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Jumper - 2D Платформер</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <!-- Шапка игры -->
-        <header class="game-header">
-            <h1><i class="fas fa-gamepad"></i> Pixel Jumper</h1>
-            <p class="subtitle">Классический 2D платформер, созданный с помощью AI</p>
-        </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixel Jumper - Исправленная версия</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        <!-- Основной контейнер игры -->
-        <div class="game-container">
-            <!-- Canvas для игры -->
-            <div class="game-canvas-container">
-                <canvas id="gameCanvas" width="1024" height="576"></canvas>
-                
-                <!-- Оверлей UI -->
-                <div class="ui-overlay">
-                    <div class="score-container">
-                        <div class="score-item">
-                            <i class="fas fa-coins"></i>
-                            <span id="scoreValue">0</span>
-                        </div>
-                        <div class="score-item">
-                            <i class="fas fa-trophy"></i>
-                            <span id="highScoreValue">0</span>
-                        </div>
-                    </div>
-                    
-                    <div class="stats-container">
-                        <div class="stat-item">
-                            <i class="fas fa-heart"></i>
-                            <span id="livesValue">3</span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-flag-checkered"></i>
-                            <span id="levelValue">1</span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-stopwatch"></i>
-                            <span id="timeValue">60</span>
-                        </div>
-                    </div>
-                </div>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
 
-                <!-- Экран паузы -->
-                <div id="pauseScreen" class="game-screen">
-                    <h2><i class="fas fa-pause"></i> Пауза</h2>
-                    <p>Игра приостановлена</p>
-                    <button id="resumeBtn" class="btn btn-primary">
-                        <i class="fas fa-play"></i> Продолжить
-                    </button>
-                </div>
+      .game-container {
+        background: rgba(25, 25, 35, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 2px solid #3498db;
+        max-width: 900px;
+        width: 100%;
+      }
 
-                <!-- Экран начала игры -->
-                <div id="startScreen" class="game-screen">
-                    <h2>Pixel Jumper</h2>
-                    <p>Собери все монеты и достигни финиша!</p>
-                    <button id="playBtn" class="btn btn-primary btn-large">
-                        <i class="fas fa-play"></i> Начать игру
-                    </button>
-                    <div class="controls-info">
-                        <h3>Управление:</h3>
-                        <div class="controls-grid">
-                            <div class="control-item">
-                                <kbd>←</kbd><kbd>→</kbd> или <kbd>A</kbd><kbd>D</kbd>
-                                <span>Движение</span>
-                            </div>
-                            <div class="control-item">
-                                <kbd>Space</kbd> или <kbd>W</kbd>
-                                <span>Прыжок</span>
-                            </div>
-                            <div class="control-item">
-                                <kbd>P</kbd>
-                                <span>Пауза</span>
-                            </div>
-                            <div class="control-item">
-                                <kbd>R</kbd>
-                                <span>Рестарт</span>
-                            </div>
-                            <div class="control-item">
-                                <kbd>Esc</kbd>
-                                <span>Меню</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      h1 {
+        text-align: center;
+        color: #3498db;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+      }
 
-                <!-- Экран Game Over -->
-                <div id="gameOverScreen" class="game-screen">
-                    <h2><i class="fas fa-skull-crossbones"></i> Игра окончена!</h2>
-                    <div class="results">
-                        <p>Ваш счет: <span id="finalScore">0</span></p>
-                        <p>Уровень: <span id="finalLevel">1</span></p>
-                        <p>Лучший счет: <span id="finalHighScore">0</span></p>
-                    </div>
-                    <div class="buttons">
-                        <button id="restartAfterGameOverBtn" class="btn btn-primary">
-                            <i class="fas fa-redo"></i> Играть снова
-                        </button>
-                        <button id="menuAfterGameOverBtn" class="btn btn-secondary">
-                            <i class="fas fa-home"></i> В меню
-                        </button>
-                    </div>
-                </div>
+      .subtitle {
+        text-align: center;
+        color: #95a5a6;
+        margin-bottom: 20px;
+      }
 
-                <!-- Экран победы -->
-                <div id="victoryScreen" class="game-screen">
-                    <h2><i class="fas fa-trophy"></i> Победа!</h2>
-                    <p>Вы прошли все уровни!</p>
-                    <div class="results">
-                        <p>Финальный счет: <span id="victoryScore">0</span></p>
-                        <p>Монет собрано: <span id="coinsCollected">0</span></p>
-                    </div>
-                    <div class="buttons">
-                        <button id="playAgainBtn" class="btn btn-primary">
-                            <i class="fas fa-redo"></i> Играть снова
-                        </button>
-                        <button id="menuAfterVictoryBtn" class="btn btn-secondary">
-                            <i class="fas fa-home"></i> В меню
-                        </button>
-                    </div>
-                </div>
-            </div>
+      canvas {
+        background: #0c141c;
+        border-radius: 10px;
+        border: 3px solid #2ecc71;
+        display: block;
+        margin: 0 auto 20px;
+      }
 
-            <!-- Панель управления -->
-            <div class="controls-panel">
-                <div class="control-buttons">
-                    <button id="leftBtn" class="btn-control btn-direction">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <div class="vertical-controls">
-                        <button id="upBtn" class="btn-control btn-direction">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                        <button id="downBtn" class="btn-control btn-direction">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                    </div>
-                    <button id="rightBtn" class="btn-control btn-direction">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                    <button id="jumpBtn" class="btn-control btn-jump">
-                        <i class="fas fa-arrow-up"></i> Прыжок
-                    </button>
-                </div>
-            </div>
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-start {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+      }
+
+      .btn-pause {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        color: white;
+      }
+
+      .btn-restart {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+        color: white;
+      }
+
+      .ui-overlay {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 0 10px;
+      }
+
+      .ui-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+
+      .score {
+        color: #f1c40f;
+      }
+      .lives {
+        color: #e74c3c;
+      }
+      .level {
+        color: #2ecc71;
+      }
+
+      .screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 10;
+      }
+
+      .screen.active {
+        display: flex;
+      }
+
+      .screen-content {
+        background: #2c3e50;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        border: 3px solid #3498db;
+        max-width: 500px;
+        width: 90%;
+      }
+
+      .screen h2 {
+        color: #3498db;
+        margin-bottom: 20px;
+        font-size: 2em;
+      }
+
+      .screen p {
+        margin-bottom: 20px;
+        font-size: 1.2em;
+      }
+
+      .controls-info {
+        background: rgba(44, 62, 80, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        border: 2px solid #3498db;
+      }
+
+      .controls-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .control-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+      }
+
+      .control-item kbd {
+        background: #34495e;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 1.1em;
+        min-width: 40px;
+        text-align: center;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #95a5a6;
+        font-size: 0.9em;
+      }
+
+      .coins-display {
+        color: #f1c40f;
+        font-size: 1.3em;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>Pixel Jumper</h1>
+      <p class="subtitle">Legendary 2D Platformer, sdelano Kashitsynoy Entertainment</p>
+
+      <div class="ui-overlay">
+        <div class="ui-item score">
+          <span>🏆</span>
+          <span id="score">0</span>
         </div>
-
-        <!-- Панель кнопок -->
-        <div class="action-buttons">
-            <button id="startButton" class="btn btn-action">
-                <i class="fas fa-play"></i> Старт
-            </button>
-            <button id="pauseButton" class="btn btn-action">
-                <i class="fas fa-pause"></i> Пауза
-            </button>
-            <button id="restartButton" class="btn btn-action">
-                <i class="fas fa-redo"></i> Рестарт
-            </button>
-            <button id="soundButton" class="btn btn-action">
-                <i class="fas fa-volume-up"></i> Звук
-            </button>
-            <button id="fullscreenButton" class="btn btn-action">
-                <i class="fas fa-expand"></i> Полный экран
-            </button>
+        <div class="ui-item lives">
+          <span>❤️</span>
+          <span id="lives">3</span>
         </div>
-
-        <!-- Информационные карточки -->
-        <div class="info-cards">
-            <div class="card">
-                <h3><i class="fas fa-info-circle"></i> Об игре</h3>
-                <p>Pixel Jumper - классический 2D платформер. Управляйте персонажем, собирайте монеты, избегайте препятствий и достигайте финиша!</p>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-bolt"></i> Особенности</h3>
-                <ul>
-                    <li>3 уровня с разной сложностью</li>
-                    <li>Подвижные платформы</li>
-                    <li>Система сохранения рекордов</li>
-                    <li>Эффекты частиц</li>
-                    <li>Адаптивное управление</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-code"></i> О разработке</h3>
-                <p>Игра полностью разработана на чистом JavaScript с использованием Canvas API. Создано с помощью AI (Cursor/DeepSeek).</p>
-            </div>
+        <div class="ui-item level">
+          <span>🎯</span>
+          <span id="level">1/3</span>
         </div>
+        <div class="ui-item coins-display">
+          <span>💰</span>
+          <span id="coinsDisplay">0/0</span>
+        </div>
+      </div>
 
-        <!-- Футер -->
-        <footer class="game-footer">
-            <p>Pixel Jumper © 2024 | Разработано с использованием AI | 
-               <a href="https://github.com/yourusername/pixel-jumper" target="_blank">
-                   <i class="fab fa-github"></i> GitHub
-               </a>
-            </p>
-        </footer>
+      <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+      <div class="controls">
+        <button id="startBtn" class="btn-start"><span>▶️</span> Старт</button>
+        <button id="pauseBtn" class="btn-pause"><span>⏸️</span> Пауза</button>
+        <button id="restartBtn" class="btn-restart">
+          <span>🔄</span> Рестарт
+        </button>
+      </div>
+
+      <!-- Экран старта -->
+      <div id="startScreen" class="screen active">
+        <div class="screen-content">
+          <h2>Pixel Jumper</h2>
+          <p>Собери все монеты на каждом уровне!</p>
+          <button
+            id="playBtn"
+            class="btn-start"
+            style="margin: 20px 0; padding: 15px 30px; font-size: 1.2em"
+          >
+            <span>▶️</span> Начать игру
+          </button>
+          <div class="controls-info">
+            <h3>Управление:</h3>
+            <div class="controls-grid">
+              <div class="control-item">
+                <kbd>A</kbd>
+                <kbd>D</kbd>
+                <span>Движение</span>
+              </div>
+              <div class="control-item">
+                <kbd>W</kbd>
+                <kbd>Space</kbd>
+                <span>Прыжок</span>
+              </div>
+              <div class="control-item">
+                <kbd>P</kbd>
+                <span>Пауза</span>
+              </div>
+              <div class="control-item">
+                <kbd>R</kbd>
+                <span>Рестарт</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Экран паузы -->
+      <div id="pauseScreen" class="screen">
+        <div class="screen-content">
+          <h2>⏸️ Пауза</h2>
+          <p>Игра приостановлена</p>
+          <button id="resumeBtn" class="btn-start" style="margin-top: 20px">
+            <span>▶️</span> Продолжить
+          </button>
+        </div>
+      </div>
+
+      <!-- Экран Game Over -->
+      <div id="gameOverScreen" class="screen">
+        <div class="screen-content">
+          <h2>💀 Игра окончена!</h2>
+          <p>Ваш счет: <span id="finalScore">0</span></p>
+          <p>Уровень: <span id="finalLevel">1</span></p>
+          <button
+            id="restartAfterGameOverBtn"
+            class="btn-start"
+            style="margin-top: 20px"
+          >
+            <span>🔄</span> Играть снова
+          </button>
+        </div>
+      </div>
+
+      <!-- Экран завершения уровня -->
+      <div id="levelCompleteScreen" class="screen">
+        <div class="screen-content" style="background: rgba(46, 204, 113, 0.9)">
+          <h2>🏆 Уровень пройден!</h2>
+          <p>
+            Монеты: <span id="coinsCollected">0</span>/<span id="totalCoins"
+              >0</span
+            >
+          </p>
+          <p>Бонус: <span id="bonusPoints">0</span> очков</p>
+          <button id="nextLevelBtn" class="btn-start" style="margin-top: 20px">
+            <span>➡️</span> Следующий уровень
+          </button>
+        </div>
+      </div>
+
+      <!-- Экран победы -->
+      <div id="victoryScreen" class="screen">
+        <div class="screen-content" style="background: rgba(241, 196, 15, 0.9)">
+          <h2>👑 Победа!</h2>
+          <p>Вы прошли все 3 уровня!</p>
+          <p>Финальный счет: <span id="victoryScore">0</span></p>
+          <button id="playAgainBtn" class="btn-start" style="margin-top: 20px">
+            <span>🔄</span> Играть снова
+          </button>
+        </div>
+      </div>
+
+      <footer>
+        Pixel Jumper © 2024 | Все монеты восстанавливаются после рестарта
+      </footer>
     </div>
 
-    <!-- Модальное окно настроек -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h2><i class="fas fa-cog"></i> Настройки</h2>
-            <div class="settings-group">
-                <label>
-                    <input type="checkbox" id="soundToggle" checked> Звук
-                </label>
-                <label>
-                    <input type="checkbox" id="particlesToggle" checked> Эффекты частиц
-                </label>
-            </div>
-            <button id="closeSettingsBtn" class="btn btn-primary">Закрыть</button>
-        </div>
-    </div>
+    <script>
+      // Простая игра с уровнями - ИСПРАВЛЕННАЯ ВЕРСИЯ
+      class SimpleGame {
+        constructor() {
+          this.canvas = document.getElementById("gameCanvas");
+          this.ctx = this.canvas.getContext("2d");
+          this.state = "menu"; // menu, playing, paused, gameOver, levelComplete, victory
+          this.score = 0;
+          this.lives = 3;
+          this.currentLevel = 1;
+          this.totalLevels = 3;
+          this.coinsCollected = 0;
+          this.totalCoins = 0;
 
-    <!-- Подключение JavaScript файлов -->
-    <script src="js/utils/Vector2.js"></script>
-    <script src="js/utils/Constants.js"></script>
-    <script src="js/utils/Helpers.js"></script>
-    
-    <script src="js/entities/Player.js"></script>
-    <script src="js/entities/Platform.js"></script>
-    <script src="js/entities/Coin.js"></script>
-    
-    <script src="js/managers/LevelManager.js"></script>
-    <script src="js/managers/ScoreManager.js"></script>
-    <script src="js/managers/UIManager.js"></script>
-    
-    <script src="js/PhysicsEngine.js"></script>
-    <script src="js/CollisionSystem.js"></script>
-    <script src="js/InputHandler.js"></script>
-    <script src="js/GameLoop.js"></script>
-    <script src="js/Game.js"></script>
-    <script src="js/main.js"></script>
-</body>
+          // Храним оригинальные уровни
+          this.levelData = this.createLevelData();
+
+          // Инициализация
+          this.loadCurrentLevel();
+          this.setupInput();
+          this.setupUI();
+          this.updateUI();
+
+          console.log("Игра создана");
+        }
+
+        createLevelData() {
+          return [
+            {
+              // Уровень 1
+              id: 1,
+              name: "Обучение",
+              platforms: [
+                { x: 50, y: 350, width: 200, height: 20 },
+                { x: 300, y: 300, width: 150, height: 20 },
+                { x: 500, y: 250, width: 150, height: 20 },
+                { x: 700, y: 200, width: 150, height: 20 },
+                { x: 600, y: 150, width: 100, height: 20 },
+                { x: 400, y: 100, width: 100, height: 20 },
+              ],
+              coins: [
+                { x: 150, y: 290 },
+                { x: 350, y: 240 },
+                { x: 550, y: 190 },
+                { x: 750, y: 140 },
+                { x: 650, y: 90 },
+                { x: 450, y: 40 },
+              ],
+              startX: 100,
+              startY: 250,
+              finishX: 750,
+              finishY: 140,
+            },
+            {
+              // Уровень 2
+              id: 2,
+              name: "Сложнее",
+              platforms: [
+                { x: 50, y: 350, width: 150, height: 20 },
+                { x: 250, y: 300, width: 100, height: 20 },
+                { x: 400, y: 250, width: 100, height: 20 },
+                { x: 550, y: 300, width: 100, height: 20 },
+                { x: 700, y: 250, width: 150, height: 20 },
+                { x: 600, y: 200, width: 80, height: 20 },
+                { x: 450, y: 150, width: 80, height: 20 },
+                { x: 300, y: 100, width: 80, height: 20 },
+              ],
+              coins: [
+                { x: 125, y: 290 },
+                { x: 300, y: 240 },
+                { x: 450, y: 190 },
+                { x: 600, y: 240 },
+                { x: 775, y: 190 },
+                { x: 640, y: 140 },
+                { x: 490, y: 90 },
+                { x: 340, y: 40 },
+              ],
+              startX: 100,
+              startY: 280,
+              finishX: 340,
+              finishY: 40,
+            },
+            {
+              // Уровень 3
+              id: 3,
+              name: "Эксперт",
+              platforms: [
+                { x: 50, y: 350, width: 120, height: 20 },
+                { x: 220, y: 320, width: 100, height: 20 },
+                { x: 370, y: 350, width: 100, height: 20 },
+                { x: 520, y: 320, width: 100, height: 20 },
+                { x: 670, y: 350, width: 120, height: 20 },
+                { x: 600, y: 280, width: 80, height: 20 },
+                { x: 450, y: 250, width: 80, height: 20 },
+                { x: 300, y: 220, width: 80, height: 20 },
+                { x: 150, y: 250, width: 80, height: 20 },
+                { x: 50, y: 180, width: 80, height: 20 },
+                { x: 200, y: 150, width: 100, height: 20 },
+                { x: 400, y: 120, width: 100, height: 20 },
+                { x: 600, y: 90, width: 100, height: 20 },
+              ],
+              coins: [
+                { x: 110, y: 290 },
+                { x: 270, y: 260 },
+                { x: 420, y: 290 },
+                { x: 570, y: 260 },
+                { x: 730, y: 290 },
+                { x: 640, y: 220 },
+                { x: 490, y: 190 },
+                { x: 340, y: 160 },
+                { x: 190, y: 190 },
+                { x: 90, y: 120 },
+                { x: 250, y: 90 },
+                { x: 450, y: 60 },
+                { x: 650, y: 30 },
+              ],
+              startX: 100,
+              startY: 280,
+              finishX: 650,
+              finishY: 30,
+            },
+          ];
+        }
+
+        loadCurrentLevel() {
+          const level = this.levelData[this.currentLevel - 1];
+          console.log(`Загружаем уровень ${this.currentLevel}: ${level.name}`);
+
+          // Создаем свежие монеты из оригинальных данных
+          this.coins = level.coins.map((coin) => ({
+            x: coin.x,
+            y: coin.y,
+            collected: false,
+          }));
+
+          this.totalCoins = this.coins.length;
+          this.coinsCollected = 0;
+
+          // Игрок
+          this.player = {
+            x: level.startX,
+            y: level.startY,
+            width: 32,
+            height: 64,
+            vx: 0,
+            vy: 0,
+            onGround: false,
+            facingRight: true,
+            canJump: true,
+          };
+
+          // Платформы и финиш
+          this.platforms = level.platforms;
+          this.finish = {
+            x: level.finishX,
+            y: level.finishY,
+            width: 30,
+            height: 50,
+          };
+
+          this.updateUI();
+        }
+
+        setupInput() {
+          // Клавиатура
+          document.addEventListener("keydown", (e) => {
+            const key = e.key.toLowerCase();
+            this.keys[key] = true;
+
+            if (e.key === " ") e.preventDefault();
+            if (key === "p") this.togglePause();
+            if (key === "r") this.restart();
+          });
+
+          document.addEventListener("keyup", (e) => {
+            const key = e.key.toLowerCase();
+            this.keys[key] = false;
+
+            // Разрешаем прыжок снова когда отпускаем клавишу
+            if (key === "w" || key === " " || key === "arrowup") {
+              if (this.player) this.player.canJump = true;
+            }
+          });
+
+          this.keys = {};
+        }
+
+        setupUI() {
+          // Кнопки
+          const addClickListener = (id, handler) => {
+            const element = document.getElementById(id);
+            if (element) {
+              element.addEventListener("click", handler.bind(this));
+            }
+          };
+
+          addClickListener("playBtn", () => this.start());
+          addClickListener("startBtn", () => this.start());
+          addClickListener("pauseBtn", () => this.togglePause());
+          addClickListener("resumeBtn", () => this.togglePause());
+          addClickListener("restartBtn", () => this.restart());
+          addClickListener("restartAfterGameOverBtn", () => this.restart());
+          addClickListener("nextLevelBtn", () => this.nextLevel());
+          addClickListener("playAgainBtn", () => this.restart());
+
+          // Скрываем все экраны кроме стартового
+          this.hideAllScreens();
+          this.showScreen("startScreen");
+        }
+
+        showScreen(screenId) {
+          this.hideAllScreens();
+          const screen = document.getElementById(screenId);
+          if (screen) {
+            screen.classList.add("active");
+          }
+        }
+
+        hideAllScreens() {
+          const screens = document.querySelectorAll(".screen");
+          screens.forEach((screen) => screen.classList.remove("active"));
+        }
+
+        updateUI() {
+          document.getElementById("score").textContent = this.score;
+          document.getElementById("lives").textContent = this.lives;
+          document.getElementById(
+            "level"
+          ).textContent = `${this.currentLevel}/${this.totalLevels}`;
+          document.getElementById(
+            "coinsDisplay"
+          ).textContent = `${this.coinsCollected}/${this.totalCoins}`;
+          document.getElementById("finalScore").textContent = this.score;
+          document.getElementById("finalLevel").textContent = this.currentLevel;
+          document.getElementById("coinsCollected").textContent =
+            this.coinsCollected;
+          document.getElementById("totalCoins").textContent = this.totalCoins;
+          document.getElementById("bonusPoints").textContent =
+            this.coinsCollected * 20;
+          document.getElementById("victoryScore").textContent = this.score;
+        }
+
+        start() {
+          if (this.state === "playing") return;
+
+          this.state = "playing";
+          this.running = true;
+          this.lastTime = performance.now();
+          this.showScreen("");
+
+          // Запускаем игровой цикл
+          this.gameLoop();
+
+          console.log("Игра началась");
+        }
+
+        togglePause() {
+          if (this.state === "playing") {
+            this.state = "paused";
+            this.showScreen("pauseScreen");
+          } else if (this.state === "paused") {
+            this.state = "playing";
+            this.showScreen("");
+            this.lastTime = performance.now();
+            this.gameLoop();
+          }
+        }
+
+        restart() {
+          console.log("Рестарт игры...");
+
+          this.score = 0;
+          this.lives = 3;
+          this.currentLevel = 1;
+          this.loadCurrentLevel();
+          this.state = "menu";
+          this.showScreen("startScreen");
+          this.updateUI();
+
+          console.log("Игра перезапущена");
+        }
+
+        restartLevel() {
+          console.log("Рестарт уровня...");
+
+          this.loadCurrentLevel();
+          this.state = "playing";
+          this.running = true;
+          this.lastTime = performance.now();
+          this.showScreen("");
+          this.gameLoop();
+        }
+
+        gameOver() {
+          this.state = "gameOver";
+          this.running = false;
+          this.showScreen("gameOverScreen");
+          console.log("Игра окончена");
+        }
+
+        completeLevel() {
+          this.state = "levelComplete";
+          this.running = false;
+
+          // Бонусы
+          const coinsBonus = this.coinsCollected * 20;
+          const levelBonus = 100;
+          this.score += coinsBonus + levelBonus;
+
+          this.updateUI();
+          this.showScreen("levelCompleteScreen");
+
+          console.log(
+            `Уровень ${this.currentLevel} пройден! Бонус: ${
+              coinsBonus + levelBonus
+            } очков`
+          );
+        }
+
+        victory() {
+          this.state = "victory";
+          this.running = false;
+
+          // Финальный бонус
+          this.score += 500;
+
+          this.updateUI();
+          this.showScreen("victoryScreen");
+
+          console.log("Все уровни пройдены! Победа!");
+        }
+
+        nextLevel() {
+          if (this.currentLevel < this.totalLevels) {
+            this.currentLevel++;
+            this.loadCurrentLevel();
+            this.state = "playing";
+            this.running = true;
+            this.lastTime = performance.now();
+            this.showScreen("");
+            this.gameLoop();
+
+            console.log(`Переход на уровень ${this.currentLevel}`);
+          } else {
+            this.victory();
+          }
+        }
+
+        gameLoop() {
+          if (!this.running || this.state !== "playing") return;
+
+          const currentTime = performance.now();
+          const deltaTime = Math.min(currentTime - this.lastTime, 100) / 1000;
+          this.lastTime = currentTime;
+
+          // Обновление
+          this.update(deltaTime);
+
+          // Отрисовка
+          this.render();
+
+          // Следующий кадр
+          requestAnimationFrame(() => this.gameLoop());
+        }
+
+        update(deltaTime) {
+          const player = this.player;
+
+          // Управление
+          if (this.keys["a"] || this.keys["arrowleft"]) {
+            player.vx = -5;
+            player.facingRight = false;
+          } else if (this.keys["d"] || this.keys["arrowright"]) {
+            player.vx = 5;
+            player.facingRight = true;
+          } else {
+            player.vx *= 0.85;
+            if (Math.abs(player.vx) < 0.1) player.vx = 0;
+          }
+
+          // Прыжок
+          if (
+            (this.keys["w"] || this.keys[" "] || this.keys["arrowup"]) &&
+            player.onGround &&
+            player.canJump
+          ) {
+            player.vy = -12;
+            player.onGround = false;
+            player.canJump = false;
+          }
+
+          // Гравитация
+          if (!player.onGround) {
+            player.vy += 0.5;
+            player.vy = Math.min(player.vy, 20);
+          }
+
+          // Движение
+          player.x += player.vx;
+          player.y += player.vy;
+
+          // Границы экрана
+          if (player.x < 0) {
+            player.x = 0;
+            player.vx = 0;
+          }
+          if (player.x > this.canvas.width - player.width) {
+            player.x = this.canvas.width - player.width;
+            player.vx = 0;
+          }
+
+          // Падение
+          if (player.y > this.canvas.height) {
+            this.lives--;
+            if (this.lives <= 0) {
+              this.gameOver();
+            } else {
+              // Респавн на текущем уровне
+              const level = this.levelData[this.currentLevel - 1];
+              player.x = level.startX;
+              player.y = level.startY;
+              player.vx = 0;
+              player.vy = 0;
+              player.onGround = false;
+              player.canJump = true;
+              this.updateUI();
+
+              console.log(`Респавн. Осталось жизней: ${this.lives}`);
+            }
+          }
+
+          // Коллизии с платформами
+          player.onGround = false;
+          for (const platform of this.platforms) {
+            if (this.checkCollision(player, platform)) {
+              // Определяем сторону коллизии
+              const playerBottom = player.y + player.height;
+              const platformTop = platform.y;
+
+              // Падение на платформу сверху
+              if (player.vy > 0 && playerBottom - player.vy <= platformTop) {
+                player.y = platformTop - player.height;
+                player.vy = 0;
+                player.onGround = true;
+                player.canJump = true;
+              }
+              // Удар головой снизу
+              else if (player.vy < 0) {
+                player.y = platformTop + platform.height;
+                player.vy = 0;
+              }
+              // Боковые коллизии
+              else {
+                if (player.vx > 0) {
+                  // Двигался вправо
+                  player.x = platform.x - player.width;
+                  player.vx = 0;
+                } else if (player.vx < 0) {
+                  // Двигался влево
+                  player.x = platform.x + platform.width;
+                  player.vx = 0;
+                }
+              }
+            }
+          }
+
+          // Сбор монет
+          let collectedNewCoins = false;
+          for (let i = this.coins.length - 1; i >= 0; i--) {
+            const coin = this.coins[i];
+            if (!coin.collected) {
+              const dx = player.x + player.width / 2 - coin.x;
+              const dy = player.y + player.height / 2 - coin.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < 30) {
+                coin.collected = true;
+                this.score += 10;
+                this.coinsCollected++;
+                collectedNewCoins = true;
+              }
+            }
+          }
+
+          if (collectedNewCoins) {
+            this.updateUI();
+          }
+
+          // Проверка финиша
+          if (this.checkCollision(player, this.finish)) {
+            if (this.coinsCollected >= this.totalCoins) {
+              this.completeLevel();
+            } else {
+              // Сообщение о необходимости собрать все монеты
+              const remaining = this.totalCoins - this.coinsCollected;
+              console.log(`Соберите все монеты! Осталось: ${remaining}`);
+            }
+          }
+        }
+
+        checkCollision(obj1, obj2) {
+          return (
+            obj1.x < obj2.x + obj2.width &&
+            obj1.x + obj1.width > obj2.x &&
+            obj1.y < obj2.y + obj2.height &&
+            obj1.y + obj1.height > obj2.y
+          );
+        }
+
+        render() {
+          const ctx = this.ctx;
+          const player = this.player;
+
+          // Очистка
+          ctx.fillStyle = "#0c141c";
+          ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+          // Фон
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            this.canvas.height
+          );
+          gradient.addColorStop(0, "#1a5276");
+          gradient.addColorStop(1, "#0c3c5c");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+          // Платформы
+          ctx.fillStyle = "#2ecc71";
+          for (const platform of this.platforms) {
+            ctx.fillRect(
+              platform.x,
+              platform.y,
+              platform.width,
+              platform.height
+            );
+
+            // Контур
+            ctx.strokeStyle = "#27ae60";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(
+              platform.x,
+              platform.y,
+              platform.width,
+              platform.height
+            );
+          }
+
+          // Монеты
+          for (const coin of this.coins) {
+            if (!coin.collected) {
+              ctx.save();
+              ctx.translate(coin.x, coin.y);
+
+              // Анимация вращения
+              const rotation = Date.now() / 1000;
+              ctx.rotate(rotation);
+
+              ctx.fillStyle = "#f1c40f";
+              ctx.beginPath();
+              ctx.arc(0, 0, 15, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.fillStyle = "#f39c12";
+              ctx.beginPath();
+              ctx.arc(0, 0, 10, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.fillStyle = "#000";
+              ctx.font = "bold 14px Arial";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText("C", 0, 0);
+
+              ctx.restore();
+            }
+          }
+
+          // Финиш
+          ctx.fillStyle = "#e74c3c";
+          ctx.fillRect(
+            this.finish.x,
+            this.finish.y,
+            this.finish.width,
+            this.finish.height
+          );
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 16px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(
+            "FINISH",
+            this.finish.x + this.finish.width / 2,
+            this.finish.y + this.finish.height / 2
+          );
+
+          // Игрок
+          ctx.save();
+
+          if (!player.facingRight) {
+            ctx.translate(player.x + player.width / 2, 0);
+            ctx.scale(-1, 1);
+            ctx.translate(-(player.x + player.width / 2), 0);
+          }
+
+          ctx.fillStyle = "#3498db";
+          ctx.fillRect(player.x, player.y, player.width, player.height);
+
+          // Голова
+          ctx.fillStyle = "#2980b9";
+          ctx.beginPath();
+          ctx.arc(
+            player.x + player.width / 2,
+            player.y + 15,
+            12,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+
+          // Глаза
+          ctx.fillStyle = "#fff";
+          ctx.beginPath();
+          ctx.arc(
+            player.x + player.width / 2 - 5,
+            player.y + 12,
+            3,
+            0,
+            Math.PI * 2
+          );
+          ctx.arc(
+            player.x + player.width / 2 + 5,
+            player.y + 12,
+            3,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+
+          // Тело
+          ctx.fillStyle = "#2980b9";
+          ctx.fillRect(
+            player.x + 5,
+            player.y + 25,
+            player.width - 10,
+            player.height - 30
+          );
+
+          // Ноги
+          ctx.fillStyle = "#21618c";
+          const legOffset = Math.sin(Date.now() / 100) * 3;
+          ctx.fillRect(player.x + 8, player.y + player.height - 15, 8, 15);
+          ctx.fillRect(
+            player.x + player.width - 16,
+            player.y + player.height - 15 + legOffset,
+            8,
+            15
+          );
+
+          ctx.restore();
+
+          // UI поверх
+          ctx.fillStyle = "white";
+          ctx.font = "bold 16px Arial";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(
+            `Монеты: ${this.coinsCollected}/${this.totalCoins}`,
+            10,
+            10
+          );
+          ctx.fillText(`Уровень: ${this.currentLevel}`, 10, 35);
+          ctx.fillText(`Счет: ${this.score}`, 10, 60);
+        }
+      }
+
+      // Запуск при загрузке
+      window.addEventListener("load", () => {
+        console.log("Загружаем игру...");
+        window.game = new SimpleGame();
+
+        // Тест
+        setTimeout(() => {
+          console.log("Готово! Управление: A/D - движение, W/Space - прыжок");
+          console.log(
+            "Всего 3 уровня. Соберите все монеты чтобы пройти уровень!"
+          );
+        }, 1000);
+      });
+    </script>
+  </body>
 </html>
