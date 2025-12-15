@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Jumper - Исправленная версия</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #3498db;
+            background: #0c141c;
+            margin: 20px 0;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pixel Jumper - Исправленная версия</h1>
+        <canvas id="gameCanvas" width="800" height="450"></canvas>
+        
+        <div class="controls">
+            <button onclick="startGame()">Старт</button>
+            <button onclick="pauseGame()">Пауза</button>
+            <button onclick="restartGame()">Рестарт</button>
+            <div style="margin-top: 10px;">
+                <small>Управление: ← → A/D - движение, Space/W - прыжок</small>
+            </div>
+        </div>
+        
+        <div id="debug" style="text-align: left; margin-top: 20px; font-family: monospace;"></div>
+    </div>
+
+    <script>
+        // Простая версия игры без респавна
+        class SimpleGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.player = { x: 100, y: 300, width: 32, height: 64, vx: 0, vy: 0, onGround: false };
+                this.platforms = [
+                    { x: 50, y: 350, width: 200, height: 20 },
+                    { x: 300, y: 300, width: 150, height: 20 },
+                    { x: 500, y: 250, width: 150, height: 20 },
+                    { x: 700, y: 200, width: 150, height: 20 }
+                ];
+                this.keys = {};
+                this.running = false;
+                this.lastTime = 0;
+                
+                this.setup();
+            }
+            
+            setup() {
+                // Управление
+                window.addEventListener('keydown', e => {
+                    this.keys[e.key] = true;
+                    if (e.key === ' ') e.preventDefault();
+                });
+                window.addEventListener('keyup', e => this.keys[e.key] = false);
+            }
+            
+            start() {
+                if (this.running) return;
+                this.running = true;
+                this.lastTime = performance.now();
+                this.gameLoop();
+            }
+            
+            pause() {
+                this.running = false;
+            }
+            
+            restart() {
+                this.player.x = 100;
+                this.player.y = 300;
+                this.player.vx = 0;
+                this.player.vy = 0;
+            }
+            
+            gameLoop() {
+                if (!this.running) return;
+                
+                const currentTime = performance.now();
+                const deltaTime = Math.min(currentTime - this.lastTime, 100) / 1000;
+                this.lastTime = currentTime;
+                
+                // Обновление
+                this.update(deltaTime);
+                
+                // Отрисовка
+                this.render();
+                
+                requestAnimationFrame(() => this.gameLoop());
+            }
+            
+            update(deltaTime) {
+                // Движение
+                if (this.keys['ArrowLeft'] || this.keys['a']) this.player.vx = -5;
+                else if (this.keys['ArrowRight'] || this.keys['d']) this.player.vx = 5;
+                else this.player.vx *= 0.8;
+                
+                // Прыжок
+                if ((this.keys[' '] || this.keys['w'] || this.keys['ArrowUp']) && this.player.onGround) {
+                    this.player.vy = -10;
+                    this.player.onGround = false;
+                }
+                
+                // Гравитация
+                this.player.vy += 0.5;
+                this.player.vy = Math.min(this.player.vy, 15);
+                
+                // Движение
+                this.player.x += this.player.vx;
+                this.player.y += this.player.vy;
+                
+                // Коллизии с платформами
+                this.player.onGround = false;
+                for (const platform of this.platforms) {
+                    if (this.player.x < platform.x + platform.width &&
+                        this.player.x + this.player.width > platform.x &&
+                        this.player.y < platform.y + platform.height &&
+                        this.player.y + this.player.height > platform.y) {
+                        
+                        // Сверху
+                        if (this.player.vy > 0) {
+                            this.player.y = platform.y - this.player.height;
+                            this.player.vy = 0;
+                            this.player.onGround = true;
+                        }
+                    }
+                }
+                
+                // Границы экрана
+                if (this.player.x < 0) this.player.x = 0;
+                if (this.player.x > this.canvas.width - this.player.width) this.player.x = this.canvas.width - this.player.width;
+                if (this.player.y > this.canvas.height) {
+                    // Просто поднимаем игрока наверх
+                    this.player.y = 50;
+                    this.player.vy = 0;
+                }
+            }
+            
+            render() {
+                // Очистка
+                this.ctx.fillStyle = '#0c141c';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Платформы
+                this.ctx.fillStyle = '#2ecc71';
+                for (const platform of this.platforms) {
+                    this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                }
+                
+                // Игрок
+                this.ctx.fillStyle = '#3498db';
+                this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+                
+                // Отладка
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '12px Arial';
+                this.ctx.fillText(`X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`, 10, 20);
+                this.ctx.fillText(`VX: ${this.player.vx.toFixed(1)} VY: ${this.player.vy.toFixed(1)}`, 10, 40);
+                this.ctx.fillText(`На земле: ${this.player.onGround}`, 10, 60);
+            }
+        }
+        
+        // Запуск
+        const game = new SimpleGame();
+        window.game = game;
+        
+        function startGame() { game.start(); }
+        function pauseGame() { game.pause(); }
+        function restartGame() { game.restart(); game.start(); }
+        
+        // Автозапуск
+        setTimeout(startGame, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Jumper - 2D Платформер</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка игры -->
+        <header class="game-header">
+            <h1><i class="fas fa-gamepad"></i> Pixel Jumper</h1>
+            <p class="subtitle">Классический 2D платформер, созданный с помощью AI</p>
+        </header>
+
+        <!-- Основной контейнер игры -->
+        <div class="game-container">
+            <!-- Canvas для игры -->
+            <div class="game-canvas-container">
+                <canvas id="gameCanvas" width="1024" height="576"></canvas>
+                
+                <!-- Оверлей UI -->
+                <div class="ui-overlay">
+                    <div class="score-container">
+                        <div class="score-item">
+                            <i class="fas fa-coins"></i>
+                            <span id="scoreValue">0</span>
+                        </div>
+                        <div class="score-item">
+                            <i class="fas fa-trophy"></i>
+                            <span id="highScoreValue">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span id="livesValue">3</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-flag-checkered"></i>
+                            <span id="levelValue">1</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-stopwatch"></i>
+                            <span id="timeValue">60</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Экран паузы -->
+                <div id="pauseScreen" class="game-screen">
+                    <h2><i class="fas fa-pause"></i> Пауза</h2>
+                    <p>Игра приостановлена</p>
+                    <button id="resumeBtn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Продолжить
+                    </button>
+                </div>
+
+                <!-- Экран начала игры -->
+                <div id="startScreen" class="game-screen">
+                    <h2>Pixel Jumper</h2>
+                    <p>Собери все монеты и достигни финиша!</p>
+                    <button id="playBtn" class="btn btn-primary btn-large">
+                        <i class="fas fa-play"></i> Начать игру
+                    </button>
+                    <div class="controls-info">
+                        <h3>Управление:</h3>
+                        <div class="controls-grid">
+                            <div class="control-item">
+                                <kbd>←</kbd><kbd>→</kbd> или <kbd>A</kbd><kbd>D</kbd>
+                                <span>Движение</span>
+                            </div>
+                            <div class="control-item">
+                                <kbd>Space</kbd> или <kbd>W</kbd>
+                                <span>Прыжок</span>
+                            </div>
+                            <div class="control-item">
+                                <kbd>P</kbd>
+                                <span>Пауза</span>
+                            </div>
+                            <div class="control-item">
+                                <kbd>R</kbd>
+                                <span>Рестарт</span>
+                            </div>
+                            <div class="control-item">
+                                <kbd>Esc</kbd>
+                                <span>Меню</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Экран Game Over -->
+                <div id="gameOverScreen" class="game-screen">
+                    <h2><i class="fas fa-skull-crossbones"></i> Игра окончена!</h2>
+                    <div class="results">
+                        <p>Ваш счет: <span id="finalScore">0</span></p>
+                        <p>Уровень: <span id="finalLevel">1</span></p>
+                        <p>Лучший счет: <span id="finalHighScore">0</span></p>
+                    </div>
+                    <div class="buttons">
+                        <button id="restartAfterGameOverBtn" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Играть снова
+                        </button>
+                        <button id="menuAfterGameOverBtn" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> В меню
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Экран победы -->
+                <div id="victoryScreen" class="game-screen">
+                    <h2><i class="fas fa-trophy"></i> Победа!</h2>
+                    <p>Вы прошли все уровни!</p>
+                    <div class="results">
+                        <p>Финальный счет: <span id="victoryScore">0</span></p>
+                        <p>Монет собрано: <span id="coinsCollected">0</span></p>
+                    </div>
+                    <div class="buttons">
+                        <button id="playAgainBtn" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Играть снова
+                        </button>
+                        <button id="menuAfterVictoryBtn" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> В меню
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Панель управления -->
+            <div class="controls-panel">
+                <div class="control-buttons">
+                    <button id="leftBtn" class="btn-control btn-direction">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="vertical-controls">
+                        <button id="upBtn" class="btn-control btn-direction">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button id="downBtn" class="btn-control btn-direction">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </div>
+                    <button id="rightBtn" class="btn-control btn-direction">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button id="jumpBtn" class="btn-control btn-jump">
+                        <i class="fas fa-arrow-up"></i> Прыжок
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель кнопок -->
+        <div class="action-buttons">
+            <button id="startButton" class="btn btn-action">
+                <i class="fas fa-play"></i> Старт
+            </button>
+            <button id="pauseButton" class="btn btn-action">
+                <i class="fas fa-pause"></i> Пауза
+            </button>
+            <button id="restartButton" class="btn btn-action">
+                <i class="fas fa-redo"></i> Рестарт
+            </button>
+            <button id="soundButton" class="btn btn-action">
+                <i class="fas fa-volume-up"></i> Звук
+            </button>
+            <button id="fullscreenButton" class="btn btn-action">
+                <i class="fas fa-expand"></i> Полный экран
+            </button>
+        </div>
+
+        <!-- Информационные карточки -->
+        <div class="info-cards">
+            <div class="card">
+                <h3><i class="fas fa-info-circle"></i> Об игре</h3>
+                <p>Pixel Jumper - классический 2D платформер. Управляйте персонажем, собирайте монеты, избегайте препятствий и достигайте финиша!</p>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-bolt"></i> Особенности</h3>
+                <ul>
+                    <li>3 уровня с разной сложностью</li>
+                    <li>Подвижные платформы</li>
+                    <li>Система сохранения рекордов</li>
+                    <li>Эффекты частиц</li>
+                    <li>Адаптивное управление</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-code"></i> О разработке</h3>
+                <p>Игра полностью разработана на чистом JavaScript с использованием Canvas API. Создано с помощью AI (Cursor/DeepSeek).</p>
+            </div>
+        </div>
+
+        <!-- Футер -->
+        <footer class="game-footer">
+            <p>Pixel Jumper © 2024 | Разработано с использованием AI | 
+               <a href="https://github.com/yourusername/pixel-jumper" target="_blank">
+                   <i class="fab fa-github"></i> GitHub
+               </a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-cog"></i> Настройки</h2>
+            <div class="settings-group">
+                <label>
+                    <input type="checkbox" id="soundToggle" checked> Звук
+                </label>
+                <label>
+                    <input type="checkbox" id="particlesToggle" checked> Эффекты частиц
+                </label>
+            </div>
+            <button id="closeSettingsBtn" class="btn btn-primary">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Подключение JavaScript файлов -->
+    <script src="js/utils/Vector2.js"></script>
+    <script src="js/utils/Constants.js"></script>
+    <script src="js/utils/Helpers.js"></script>
+    
+    <script src="js/entities/Player.js"></script>
+    <script src="js/entities/Platform.js"></script>
+    <script src="js/entities/Coin.js"></script>
+    
+    <script src="js/managers/LevelManager.js"></script>
+    <script src="js/managers/ScoreManager.js"></script>
+    <script src="js/managers/UIManager.js"></script>
+    
+    <script src="js/PhysicsEngine.js"></script>
+    <script src="js/CollisionSystem.js"></script>
+    <script src="js/InputHandler.js"></script>
+    <script src="js/GameLoop.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

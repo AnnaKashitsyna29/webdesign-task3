@@ -1,0 +1,224 @@
+{
+  "id": 2,
+  "name": "Горный путь",
+  "difficulty": "normal",
+  "width": 2500,
+  "height": 1200,
+  "startPosition": {
+    "x": 100,
+    "y": 500
+  },
+  "endPosition": {
+    "x": 2300,
+    "y": 200
+  },
+  "platforms": [
+    {
+      "x": 50,
+      "y": 550,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 300,
+      "y": 500,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 450,
+      "y": 450,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 600,
+      "y": 400,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 750,
+      "y": 350,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 900,
+      "y": 400,
+      "width": 150,
+      "height": 32,
+      "type": "moving",
+      "speed": 2,
+      "moveRange": 150
+    },
+    {
+      "x": 1150,
+      "y": 350,
+      "width": 150,
+      "height": 32,
+      "type": "moving",
+      "speed": 3,
+      "moveRange": 100
+    },
+    {
+      "x": 1400,
+      "y": 300,
+      "width": 80,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 1520,
+      "y": 250,
+      "width": 80,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 1640,
+      "y": 200,
+      "width": 80,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 1800,
+      "y": 250,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 2050,
+      "y": 200,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 2250,
+      "y": 200,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1000,
+      "y": 300,
+      "width": 120,
+      "height": 32,
+      "type": "jumpBoost"
+    },
+    {
+      "x": 1300,
+      "y": 400,
+      "width": 120,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1900,
+      "y": 350,
+      "width": 120,
+      "height": 32,
+      "type": "normal"
+    }
+  ],
+  "coins": [
+    {
+      "x": 325,
+      "y": 420
+    },
+    {
+      "x": 475,
+      "y": 370
+    },
+    {
+      "x": 625,
+      "y": 320
+    },
+    {
+      "x": 775,
+      "y": 270
+    },
+    {
+      "x": 950,
+      "y": 320
+    },
+    {
+      "x": 1200,
+      "y": 270
+    },
+    {
+      "x": 1440,
+      "y": 220
+    },
+    {
+      "x": 1560,
+      "y": 170
+    },
+    {
+      "x": 1680,
+      "y": 120
+    },
+    {
+      "x": 1850,
+      "y": 170
+    },
+    {
+      "x": 2100,
+      "y": 120
+    },
+    {
+      "x": 2300,
+      "y": 120
+    },
+    {
+      "x": 1025,
+      "y": 220
+    },
+    {
+      "x": 1325,
+      "y": 320
+    },
+    {
+      "x": 1925,
+      "y": 270
+    }
+  ],
+  "enemies": [
+    {
+      "x": 1000,
+      "y": 300,
+      "type": "patrol",
+      "patrolRange": 100,
+      "speed": 2,
+      "health": 1
+    },
+    {
+      "x": 1600,
+      "y": 100,
+      "type": "patrol",
+      "patrolRange": 150,
+      "speed": 1.5,
+      "health": 1
+    }
+  ],
+  "timeLimit": 90,
+  "description": "Будьте осторожны с движущимися и ломающимися платформами!",
+  "background": {
+    "color": "#2c3e50",
+    "hasParallax": true,
+    "parallaxLayers": 4,
+    "hasMountains": true
+  },
+  "music": "level2.mp3",
+  "unlockCondition": "complete_level1",
+  "requiredScore": 500
+}

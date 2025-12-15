@@ -1,0 +1,170 @@
+{
+  "id": 1,
+  "name": "Начало пути",
+  "difficulty": "easy",
+  "width": 1024,  
+"height": 576,  
+
+  "startPosition": {
+    "x": 100,
+    "y": 400
+  },
+  "endPosition": {
+    "x": 1800,
+    "y": 300
+  },
+  "platforms": [
+    {
+      "x": 50,
+      "y": 450,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 300,
+      "y": 400,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 500,
+      "y": 350,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 700,
+      "y": 300,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 900,
+      "y": 250,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1100,
+      "y": 200,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1300,
+      "y": 250,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1550,
+      "y": 300,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1750,
+      "y": 300,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 400,
+      "y": 500,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 800,
+      "y": 400,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1200,
+      "y": 350,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1600,
+      "y": 400,
+      "width": 100,
+      "height": 32,
+      "type": "normal"
+    }
+  ],
+  "coins": [
+    {
+      "x": 350,
+      "y": 320
+    },
+    {
+      "x": 550,
+      "y": 270
+    },
+    {
+      "x": 750,
+      "y": 220
+    },
+    {
+      "x": 950,
+      "y": 170
+    },
+    {
+      "x": 1150,
+      "y": 120
+    },
+    {
+      "x": 1350,
+      "y": 170
+    },
+    {
+      "x": 1600,
+      "y": 220
+    },
+    {
+      "x": 1800,
+      "y": 220
+    },
+    {
+      "x": 425,
+      "y": 420
+    },
+    {
+      "x": 825,
+      "y": 320
+    },
+    {
+      "x": 1225,
+      "y": 270
+    },
+    {
+      "x": 1625,
+      "y": 320
+    }
+  ],
+  "enemies": [],
+  "timeLimit": 120,
+  "description": "Изучите основы управления и соберите все монеты!",
+  "background": {
+    "color": "#1a5276",
+    "hasParallax": true,
+    "parallaxLayers": 3
+  },
+  "music": "level1.mp3",
+  "unlockCondition": "none",
+  "requiredScore": 0
+}

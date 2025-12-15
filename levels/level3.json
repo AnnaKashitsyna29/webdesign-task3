@@ -1,0 +1,298 @@
+{
+  "id": 3,
+  "name": "Небесный вызов",
+  "difficulty": "hard",
+  "width": 3000,
+  "height": 1500,
+  "startPosition": {
+    "x": 100,
+    "y": 600
+  },
+  "endPosition": {
+    "x": 2800,
+    "y": 100
+  },
+  "platforms": [
+    {
+      "x": 50,
+      "y": 650,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 300,
+      "y": 600,
+      "width": 80,
+      "height": 32,
+      "type": "jumpBoost"
+    },
+    {
+      "x": 450,
+      "y": 550,
+      "width": 80,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 600,
+      "y": 500,
+      "width": 80,
+      "height": 32,
+      "type": "jumpBoost"
+    },
+    {
+      "x": 750,
+      "y": 450,
+      "width": 80,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 900,
+      "y": 400,
+      "width": 120,
+      "height": 32,
+      "type": "moving",
+      "speed": 3,
+      "moveRange": 200
+    },
+    {
+      "x": 1150,
+      "y": 350,
+      "width": 120,
+      "height": 32,
+      "type": "moving",
+      "speed": 3,
+      "moveRange": 200
+    },
+    {
+      "x": 1400,
+      "y": 300,
+      "width": 120,
+      "height": 32,
+      "type": "moving",
+      "speed": 3,
+      "moveRange": 200
+    },
+    {
+      "x": 1650,
+      "y": 400,
+      "width": 100,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 1800,
+      "y": 350,
+      "width": 100,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 1950,
+      "y": 300,
+      "width": 100,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 2100,
+      "y": 250,
+      "width": 100,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 2300,
+      "y": 200,
+      "width": 150,
+      "height": 32,
+      "type": "jumpBoost"
+    },
+    {
+      "x": 2500,
+      "y": 150,
+      "width": 150,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 2700,
+      "y": 100,
+      "width": 200,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 500,
+      "y": 650,
+      "width": 60,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 800,
+      "y": 550,
+      "width": 60,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1100,
+      "y": 450,
+      "width": 60,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 1550,
+      "y": 500,
+      "width": 80,
+      "height": 32,
+      "type": "breakable"
+    },
+    {
+      "x": 2200,
+      "y": 300,
+      "width": 80,
+      "height": 32,
+      "type": "normal"
+    },
+    {
+      "x": 2400,
+      "y": 250,
+      "width": 80,
+      "height": 32,
+      "type": "normal"
+    }
+  ],
+  "coins": [
+    {
+      "x": 325,
+      "y": 520
+    },
+    {
+      "x": 475,
+      "y": 470
+    },
+    {
+      "x": 625,
+      "y": 420
+    },
+    {
+      "x": 775,
+      "y": 370
+    },
+    {
+      "x": 950,
+      "y": 320
+    },
+    {
+      "x": 1200,
+      "y": 270
+    },
+    {
+      "x": 1450,
+      "y": 220
+    },
+    {
+      "x": 1700,
+      "y": 320
+    },
+    {
+      "x": 1850,
+      "y": 270
+    },
+    {
+      "x": 2000,
+      "y": 220
+    },
+    {
+      "x": 2150,
+      "y": 170
+    },
+    {
+      "x": 2350,
+      "y": 120
+    },
+    {
+      "x": 2550,
+      "y": 70
+    },
+    {
+      "x": 2750,
+      "y": 20
+    },
+    {
+      "x": 525,
+      "y": 570
+    },
+    {
+      "x": 825,
+      "y": 470
+    },
+    {
+      "x": 1125,
+      "y": 370
+    },
+    {
+      "x": 1575,
+      "y": 420
+    },
+    {
+      "x": 2225,
+      "y": 220
+    },
+    {
+      "x": 2425,
+      "y": 170
+    }
+  ],
+  "enemies": [
+    {
+      "x": 800,
+      "y": 350,
+      "type": "patrol",
+      "patrolRange": 200,
+      "speed": 2.5,
+      "health": 2
+    },
+    {
+      "x": 1300,
+      "y": 200,
+      "type": "patrol",
+      "patrolRange": 200,
+      "speed": 2.5,
+      "health": 2
+    },
+    {
+      "x": 1900,
+      "y": 250,
+      "type": "patrol",
+      "patrolRange": 150,
+      "speed": 2,
+      "health": 1
+    },
+    {
+      "x": 2400,
+      "y": 100,
+      "type": "patrol",
+      "patrolRange": 100,
+      "speed": 3,
+      "health": 1
+    }
+  ],
+  "timeLimit": 75,
+  "description": "Испытайте свои навыки на самом сложном уровне!",
+  "background": {
+    "color": "#0c3c5c",
+    "hasParallax": true,
+    "parallaxLayers": 5,
+    "hasClouds": true,
+    "hasStars": true
+  },
+  "music": "level3.mp3",
+  "unlockCondition": "complete_level2",
+  "requiredScore": 1000
+}
