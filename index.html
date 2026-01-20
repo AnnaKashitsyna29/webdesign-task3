@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pixel Jumper - Исправленная версия</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -12,45 +16,61 @@
       }
 
       body {
-        font-family: "Arial", sans-serif;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        color: white;
+        font-family: "Press Start 2P", monospace, "Courier New", Arial,
+          sans-serif;
+        background: #87ceeb; /* Sky blue background */
+        color: #000;
         min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 20px;
+        background-image: radial-gradient(#7fbfff 2px, transparent 2px),
+          radial-gradient(#7fbfff 2px, transparent 2px);
+        background-size: 40px 40px;
+        background-position: 0 0, 20px 20px;
       }
 
       .game-container {
-        background: rgba(25, 25, 35, 0.9);
-        border-radius: 15px;
+        background: #2d3436;
+        border-radius: 8px;
         padding: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        border: 2px solid #3498db;
-        max-width: 900px;
+        box-shadow: inset -5px -5px 0px rgba(0, 0, 0, 0.5),
+          inset 5px 5px 0px rgba(255, 255, 255, 0.3), 0 0 0 4px #ddd,
+          0 0 0 8px #2d3436;
+        border: 4px solid #ddd;
+        max-width: 840px;
         width: 100%;
       }
 
       h1 {
         text-align: center;
-        color: #3498db;
+        color: #ffd700; /* Gold color */
         margin-bottom: 10px;
         font-size: 2.5em;
+        text-shadow: 3px 0 0 #e17055, -3px 0 0 #e17055, 0 3px 0 #e17055,
+          0 -3px 0 #e17055;
+        letter-spacing: 2px;
+        font-family: "Press Start 2P", monospace;
       }
 
       .subtitle {
         text-align: center;
-        color: #95a5a6;
+        color: #55efc4; /* Green color */
         margin-bottom: 20px;
+        font-size: 0.8em;
+        font-family: "Press Start 2P", monospace;
       }
 
       canvas {
-        background: #0c141c;
-        border-radius: 10px;
-        border: 3px solid #2ecc71;
+        background: #87ceeb;
+        border-radius: 4px;
+        border: 4px solid #ddd;
         display: block;
         margin: 0 auto 20px;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
       }
 
       .controls {
@@ -62,36 +82,42 @@
 
       button {
         padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1em;
+        border: 4px solid #ddd;
+        border-top-color: white;
+        border-left-color: white;
+        border-radius: 0;
+        font-size: 0.8em;
         font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         gap: 8px;
         min-width: 120px;
         justify-content: center;
+        background: #aab2bd;
+        font-family: "Press Start 2P", monospace;
+        text-shadow: 1px 1px 0 #000;
+        box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.3),
+          inset 2px 2px 0px rgba(255, 255, 255, 0.4);
       }
 
       button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        background: #8794a8;
+        transform: none;
       }
 
       .btn-start {
-        background: linear-gradient(135deg, #3498db, #2980b9);
+        background: #00b894;
         color: white;
       }
 
       .btn-pause {
-        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        background: #6c5ce7;
         color: white;
       }
 
       .btn-restart {
-        background: linear-gradient(135deg, #e67e22, #d35400);
+        background: #e17055;
         color: white;
       }
 
@@ -106,18 +132,21 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 1.2em;
+        font-size: 0.7em;
         font-weight: bold;
+        font-family: "Press Start 2P", monospace;
+        color: #000;
+        text-shadow: 1px 1px 0 #fff;
       }
 
       .score {
-        color: #f1c40f;
+        color: #ffd700;
       }
       .lives {
-        color: #e74c3c;
+        color: #ff6b6b;
       }
       .level {
-        color: #2ecc71;
+        color: #55efc4;
       }
 
       .screen {
@@ -126,7 +155,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.85);
         display: none;
         justify-content: center;
         align-items: center;
@@ -139,32 +168,40 @@
       }
 
       .screen-content {
-        background: #2c3e50;
+        background: #2d3436;
         padding: 40px;
-        border-radius: 15px;
+        border-radius: 8px;
         text-align: center;
-        border: 3px solid #3498db;
+        border: 8px solid #ddd;
         max-width: 500px;
         width: 90%;
+        box-shadow: inset -5px -5px 0px rgba(0, 0, 0, 0.5),
+          inset 5px 5px 0px rgba(255, 255, 255, 0.3);
+        font-family: "Press Start 2P", monospace;
       }
 
       .screen h2 {
-        color: #3498db;
+        color: #ffd700;
         margin-bottom: 20px;
-        font-size: 2em;
+        font-size: 1.2em;
+        text-shadow: 2px 0 0 #e17055, -2px 0 0 #e17055, 0 2px 0 #e17055,
+          0 -2px 0 #e17055;
       }
 
       .screen p {
         margin-bottom: 20px;
-        font-size: 1.2em;
+        font-size: 0.6em;
+        color: #fff;
       }
 
       .controls-info {
-        background: rgba(44, 62, 80, 0.8);
+        background: #2d3436;
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 4px;
         margin-top: 20px;
-        border: 2px solid #3498db;
+        border: 4px solid #ddd;
+        box-shadow: inset -3px -3px 0px rgba(0, 0, 0, 0.3),
+          inset 2px 2px 0px rgba(255, 255, 255, 0.4);
       }
 
       .controls-grid {
@@ -180,39 +217,51 @@
         align-items: center;
         gap: 5px;
         padding: 10px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
+        background: #aab2bd;
+        border: 3px solid #ddd;
+        border-top-color: white;
+        border-left-color: white;
+        box-shadow: inset -2px -2px 0px rgba(0, 0, 0, 0.3),
+          inset 1px 1px 0px rgba(255, 255, 255, 0.4);
       }
 
       .control-item kbd {
-        background: #34495e;
+        background: #00b894;
         color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-family: monospace;
-        font-size: 1.1em;
-        min-width: 40px;
+        padding: 8px 12px;
+        border: 3px solid #ddd;
+        border-top-color: white;
+        border-left-color: white;
+        font-family: "Press Start 2P", monospace;
+        font-size: 0.5em;
+        min-width: 60px;
         text-align: center;
+        box-shadow: inset -2px -2px 0px rgba(0, 0, 0, 0.3),
+          inset 1px 1px 0px rgba(255, 255, 255, 0.4);
       }
 
       footer {
         text-align: center;
         margin-top: 20px;
-        color: #95a5a6;
-        font-size: 0.9em;
+        color: #636e72;
+        font-size: 0.5em;
+        font-family: "Press Start 2P", monospace;
       }
 
       .coins-display {
-        color: #f1c40f;
-        font-size: 1.3em;
+        color: #ffd700;
+        font-size: 0.7em;
         margin: 10px 0;
+        text-shadow: 1px 1px 0 #000;
       }
     </style>
   </head>
   <body>
     <div class="game-container">
       <h1>Pixel Jumper</h1>
-      <p class="subtitle">Legendary 2D Platformer, sdelano Kashitsynoy Entertainment</p>
+      <p class="subtitle">
+        Legendary 2D Platformer, sdelano Kashitsynoy Entertainment
+      </p>
 
       <div class="ui-overlay">
         <div class="ui-item score">
@@ -374,53 +423,135 @@
               id: 1,
               name: "Обучение",
               platforms: [
-                { x: 50, y: 350, width: 200, height: 20 },
-                { x: 300, y: 300, width: 150, height: 20 },
-                { x: 500, y: 250, width: 150, height: 20 },
-                { x: 700, y: 200, width: 150, height: 20 },
-                { x: 600, y: 150, width: 100, height: 20 },
-                { x: 400, y: 100, width: 100, height: 20 },
+                { x: 50, y: 380, width: 150, height: 20, moving: false }, // Starting platform - wide for easy start
+                {
+                  x: 250,
+                  y: 340,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 230,
+                  maxX: 270,
+                }, // Moving platform
+                { x: 400, y: 380, width: 100, height: 20, moving: false }, // Stationary platform
+                {
+                  x: 550,
+                  y: 300,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: -1,
+                  minX: 530,
+                  maxX: 570,
+                }, // Moving platform
+                {
+                  x: 400,
+                  y: 200,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 380,
+                  maxX: 420,
+                }, // Moving platform
+                { x: 250, y: 160, width: 100, height: 20, moving: false }, // Stationary platform
+                {
+                  x: 100,
+                  y: 120,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 80,
+                  maxX: 120,
+                }, // Moving platform to finish
               ],
               coins: [
-                { x: 150, y: 290 },
-                { x: 350, y: 240 },
-                { x: 550, y: 190 },
-                { x: 750, y: 140 },
-                { x: 650, y: 90 },
-                { x: 450, y: 40 },
+                { x: 125, y: 320 },
+                { x: 300, y: 280 },
+                { x: 450, y: 240 },
+                { x: 600, y: 200 },
+                { x: 450, y: 140 },
+                { x: 300, y: 100 },
+                { x: 150, y: 60 },
               ],
-              startX: 100,
-              startY: 250,
-              finishX: 750,
-              finishY: 140,
+              startX: 70,
+              startY: 310,
+              finishX: 150,
+              finishY: 60,
             },
             {
               // Уровень 2
               id: 2,
               name: "Сложнее",
               platforms: [
-                { x: 50, y: 350, width: 150, height: 20 },
-                { x: 250, y: 300, width: 100, height: 20 },
-                { x: 400, y: 250, width: 100, height: 20 },
-                { x: 550, y: 300, width: 100, height: 20 },
-                { x: 700, y: 250, width: 150, height: 20 },
-                { x: 600, y: 200, width: 80, height: 20 },
-                { x: 450, y: 150, width: 80, height: 20 },
-                { x: 300, y: 100, width: 80, height: 20 },
+                { x: 50, y: 380, width: 120, height: 20, moving: false }, // Starting platform
+                {
+                  x: 220,
+                  y: 340,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 200,
+                  maxX: 240,
+                }, // Moving platform
+                {
+                  x: 370,
+                  y: 300,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: -1,
+                  minX: 350,
+                  maxX: 390,
+                }, // Moving platform
+                {
+                  x: 550,
+                  y: 300,
+                  width: 100,
+                  height: 20,
+                  moving: false,
+                }, // Moving platform
+                {
+                  x: 630,
+                  y: 220,
+                  width: 100,
+                  height: 20,
+                  moving: false,
+                }, // Moving platform
+                {
+                  x: 430,
+                  y: 140,
+                  width: 100,
+                  height: 20,
+                  moving: false,
+                }, // Moving platform
+                {
+                  x: 220,
+                  y: 100,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 200,
+                  maxX: 240,
+                }, // Moving platform to finish
               ],
               coins: [
-                { x: 125, y: 290 },
-                { x: 300, y: 240 },
-                { x: 450, y: 190 },
-                { x: 600, y: 240 },
-                { x: 775, y: 190 },
-                { x: 640, y: 140 },
-                { x: 490, y: 90 },
-                { x: 340, y: 40 },
+                { x: 110, y: 320 },
+                { x: 270, y: 280 },
+                { x: 420, y: 240 },
+                { x: 570, y: 200 },
+                { x: 720, y: 160 },
+                { x: 570, y: 120 },
+                { x: 420, y: 80 },
+                { x: 270, y: 40 },
               ],
-              startX: 100,
-              startY: 280,
-              finishX: 340,
+              startX: 70,
+              startY: 310,
+              finishX: 270,
               finishY: 40,
             },
             {
@@ -428,39 +559,103 @@
               id: 3,
               name: "Эксперт",
               platforms: [
-                { x: 50, y: 350, width: 120, height: 20 },
-                { x: 220, y: 320, width: 100, height: 20 },
-                { x: 370, y: 350, width: 100, height: 20 },
-                { x: 520, y: 320, width: 100, height: 20 },
-                { x: 670, y: 350, width: 120, height: 20 },
-                { x: 600, y: 280, width: 80, height: 20 },
-                { x: 450, y: 250, width: 80, height: 20 },
-                { x: 300, y: 220, width: 80, height: 20 },
-                { x: 150, y: 250, width: 80, height: 20 },
-                { x: 50, y: 180, width: 80, height: 20 },
-                { x: 200, y: 150, width: 100, height: 20 },
-                { x: 400, y: 120, width: 100, height: 20 },
-                { x: 600, y: 90, width: 100, height: 20 },
+                { x: 50, y: 380, width: 100, height: 20, moving: false }, // Starting platform
+                {
+                  x: 200,
+                  y: 340,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 180,
+                  maxX: 220,
+                }, // Moving platform
+                {
+                  x: 330,
+                  y: 300,
+                  width: 100,
+                  height: 20,
+                  moving: true,
+                  speed: -1,
+                  minX: 310,
+                  maxX: 350,
+                }, // Moving platform
+                {
+                  x: 460,
+                  y: 360,
+                  width: 150,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 440,
+                  maxX: 480,
+                }, // Moving platform
+                {
+                  x: 640,
+                  y: 290,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: -1,
+                  minX: 620,
+                  maxX: 660,
+                }, // Moving platform
+                {
+                  x: 480,
+                  y: 220,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 460,
+                  maxX: 500,
+                }, // Moving platform
+                {
+                  x: 320,
+                  y: 140,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: -1,
+                  minX: 300,
+                  maxX: 340,
+                }, // Moving platform
+                {
+                  x: 180,
+                  y: 100,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 160,
+                  maxX: 200,
+                }, // Moving platform
+
+                {
+                  x: 480,
+                  y: 20,
+                  width: 80,
+                  height: 20,
+                  moving: true,
+                  speed: 1,
+                  minX: 460,
+                  maxX: 500,
+                }, // Moving platform
               ],
               coins: [
-                { x: 110, y: 290 },
-                { x: 270, y: 260 },
-                { x: 420, y: 290 },
-                { x: 570, y: 260 },
-                { x: 730, y: 290 },
-                { x: 640, y: 220 },
-                { x: 490, y: 190 },
-                { x: 340, y: 160 },
-                { x: 190, y: 190 },
-                { x: 90, y: 120 },
-                { x: 250, y: 90 },
-                { x: 450, y: 60 },
-                { x: 650, y: 30 },
+                { x: 100, y: 320 },
+                { x: 240, y: 280 },
+                { x: 370, y: 240 },
+                { x: 500, y: 200 },
+                { x: 640, y: 160 },
+                { x: 500, y: 120 },
+                { x: 360, y: 80 },
+                { x: 220, y: 40 },
               ],
-              startX: 100,
-              startY: 280,
-              finishX: 650,
-              finishY: 30,
+              startX: 70,
+              startY: 310,
+              finishX: 220,
+              finishY: 50,
             },
           ];
         }
@@ -490,6 +685,10 @@
             onGround: false,
             facingRight: true,
             canJump: true,
+            jumpsUsed: 0, // For double jump
+            maxJumps: 2, // Allow double jump
+            lastJumpTime: 0, // Time of last jump
+            jumpTapCount: 0, // Count of jump taps
           };
 
           // Платформы и финиш
@@ -711,25 +910,50 @@
 
           // Управление
           if (this.keys["a"] || this.keys["arrowleft"]) {
-            player.vx = -5;
+            player.vx = -3; // Back to original speed for better gameplay
             player.facingRight = false;
           } else if (this.keys["d"] || this.keys["arrowright"]) {
-            player.vx = 5;
+            player.vx = 3; // Back to original speed for better gameplay
             player.facingRight = true;
           } else {
             player.vx *= 0.85;
             if (Math.abs(player.vx) < 0.1) player.vx = 0;
           }
 
-          // Прыжок
-          if (
-            (this.keys["w"] || this.keys[" "] || this.keys["arrowup"]) &&
-            player.onGround &&
-            player.canJump
-          ) {
-            player.vy = -12;
-            player.onGround = false;
-            player.canJump = false;
+          // Прыжок (по одиночному или двойному нажатию)
+          const isJumpKeyPressed =
+            this.keys["w"] || this.keys[" "] || this.keys["arrowup"];
+          const currentTime = Date.now();
+          const doubleTapWindow = 300; // 300ms window for double tap
+
+          if (isJumpKeyPressed) {
+            // Check if it's a double tap within the time window
+            if (
+              currentTime - player.lastJumpTime < doubleTapWindow &&
+              player.jumpTapCount === 1
+            ) {
+              // This is the second tap in a double tap
+              if (player.jumpsUsed === 1) {
+                // Only allow second jump if first was used
+                player.vy = -10;
+                player.jumpsUsed++;
+                player.canJump = false;
+                player.jumpTapCount = 0; // Reset tap count after successful double jump
+              }
+            }
+            // Regular jump (first tap or after landing)
+            else if (
+              (player.onGround || player.jumpsUsed === 0) &&
+              player.canJump
+            ) {
+              player.vy = -10;
+              player.onGround = false;
+              player.jumpsUsed = 1;
+              player.canJump = false;
+              player.jumpTapCount = 1; // Mark first tap
+            }
+
+            player.lastJumpTime = currentTime;
           }
 
           // Гравитация
@@ -752,6 +976,18 @@
             player.vx = 0;
           }
 
+          // Движение платформ
+          for (const platform of this.platforms) {
+            if (platform.moving) {
+              platform.x += platform.speed * 0.35;
+
+              // Изменить направление при достижении границ
+              if (platform.x <= platform.minX || platform.x >= platform.maxX) {
+                platform.speed = -platform.speed;
+              }
+            }
+          }
+
           // Падение
           if (player.y > this.canvas.height) {
             this.lives--;
@@ -766,6 +1002,9 @@
               player.vy = 0;
               player.onGround = false;
               player.canJump = true;
+              player.jumpsUsed = 0; // Reset jump count on respawn
+              player.jumpTapCount = 0; // Reset tap count on respawn
+              player.lastJumpTime = 0; // Reset last jump time on respawn
               this.updateUI();
 
               console.log(`Респавн. Осталось жизней: ${this.lives}`);
@@ -773,6 +1012,7 @@
           }
 
           // Коллизии с платформами
+          let wasOnGround = player.onGround;
           player.onGround = false;
           for (const platform of this.platforms) {
             if (this.checkCollision(player, platform)) {
@@ -785,7 +1025,17 @@
                 player.y = platformTop - player.height;
                 player.vy = 0;
                 player.onGround = true;
-                player.canJump = true;
+
+                // Если платформа движется, добавляем её скорость к скорости игрока
+                if (platform.moving) {
+                  player.vx += platform.speed * 0.15; // Добавляем часть скорости платформы
+                }
+
+                // Сброс прыжков при приземлении
+                if (!wasOnGround) {
+                  player.jumpsUsed = 0;
+                  player.jumpTapCount = 0; // Reset tap count when landing
+                }
               }
               // Удар головой снизу
               else if (player.vy < 0) {
@@ -855,91 +1105,129 @@
           const player = this.player;
 
           // Очистка
-          ctx.fillStyle = "#0c141c";
+          ctx.fillStyle = "#87CEEB"; // Light blue sky background like in pixel games
           ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-          // Фон
-          const gradient = ctx.createLinearGradient(
-            0,
-            0,
-            0,
-            this.canvas.height
-          );
-          gradient.addColorStop(0, "#1a5276");
-          gradient.addColorStop(1, "#0c3c5c");
-          ctx.fillStyle = gradient;
-          ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+          // Draw pixel-style clouds
+          ctx.fillStyle = "#FFFFFF";
+          this.drawPixelCloud(ctx, 100, 80, 3);
+          this.drawPixelCloud(ctx, 300, 120, 2);
+          this.drawPixelCloud(ctx, 500, 70, 4);
 
-          // Платформы
-          ctx.fillStyle = "#2ecc71";
+          // Платформы - теперь в пиксельном стиле
           for (const platform of this.platforms) {
-            ctx.fillRect(
-              platform.x,
-              platform.y,
-              platform.width,
-              platform.height
-            );
-
-            // Контур
-            ctx.strokeStyle = "#27ae60";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(
-              platform.x,
-              platform.y,
-              platform.width,
-              platform.height
-            );
+            this.drawPixelPlatform(ctx, platform);
           }
 
-          // Монеты
+          // Монеты - в пиксельном ��тиле
           for (const coin of this.coins) {
             if (!coin.collected) {
-              ctx.save();
-              ctx.translate(coin.x, coin.y);
-
-              // Анимация вращения
-              const rotation = Date.now() / 1000;
-              ctx.rotate(rotation);
-
-              ctx.fillStyle = "#f1c40f";
-              ctx.beginPath();
-              ctx.arc(0, 0, 15, 0, Math.PI * 2);
-              ctx.fill();
-
-              ctx.fillStyle = "#f39c12";
-              ctx.beginPath();
-              ctx.arc(0, 0, 10, 0, Math.PI * 2);
-              ctx.fill();
-
-              ctx.fillStyle = "#000";
-              ctx.font = "bold 14px Arial";
-              ctx.textAlign = "center";
-              ctx.textBaseline = "middle";
-              ctx.fillText("C", 0, 0);
-
-              ctx.restore();
+              this.drawPixelCoin(ctx, coin);
             }
           }
 
-          // Финиш
-          ctx.fillStyle = "#e74c3c";
-          ctx.fillRect(
-            this.finish.x,
-            this.finish.y,
-            this.finish.width,
-            this.finish.height
-          );
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 16px Arial";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
+          // Финиш - флаг в пиксельном стиле
+          this.drawPixelFlag(ctx, this.finish);
+
+          // Игрок - в пиксельном стиле
+          this.drawPixelPlayer(ctx, player);
+
+          // UI поверх
+          ctx.fillStyle = "#000000";
+          ctx.font = "bold 16px monospace";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
           ctx.fillText(
-            "FINISH",
-            this.finish.x + this.finish.width / 2,
-            this.finish.y + this.finish.height / 2
+            `COINS: ${this.coinsCollected}/${this.totalCoins}`,
+            10,
+            10
+          );
+          ctx.fillText(`LEVEL: ${this.currentLevel}`, 10, 35);
+          ctx.fillText(`SCORE: ${this.score}`, 10, 60);
+        }
+
+        drawPixelCloud(ctx, x, y, size) {
+          ctx.fillStyle = "#FFFFFF";
+          const blockSize = 8 * size;
+
+          // Draw cloud with pixel blocks
+          for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 4 + row; col++) {
+              if (row === 0 && (col === 0 || col === 4)) continue;
+
+              ctx.fillRect(
+                x + col * blockSize,
+                y + row * blockSize,
+                blockSize,
+                blockSize
+              );
+            }
+          }
+        }
+
+        drawPixelPlatform(ctx, platform) {
+          // Main platform in green
+          ctx.fillStyle = "#2ECC71";
+          ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+
+          // Platform edge highlight
+          ctx.fillStyle = "#27AE60";
+          ctx.fillRect(platform.x, platform.y, platform.width, 2); // Top edge
+          ctx.fillRect(
+            platform.x,
+            platform.y + platform.height - 2,
+            platform.width,
+            2
+          ); // Bottom edge
+          ctx.fillRect(platform.x, platform.y, 2, platform.height); // Left edge
+          ctx.fillRect(
+            platform.x + platform.width - 2,
+            platform.y,
+            2,
+            platform.height
+          ); // Right edge
+        }
+
+        drawPixelCoin(ctx, coin) {
+          const time = Date.now() / 200;
+          const pulse = Math.sin(time) * 2;
+          const size = 8 + pulse;
+
+          // Gold coin with pixel art style
+          ctx.fillStyle = "#FFD700"; // Main gold
+          ctx.fillRect(coin.x - size / 2, coin.y - size / 2, size, size);
+
+          ctx.fillStyle = "#DAA520"; // Inner square
+          ctx.fillRect(
+            coin.x - size / 3,
+            coin.y - size / 3,
+            size * 0.66,
+            size * 0.66
           );
 
-          // Игрок
+          // Draw "C" in pixel style
+          ctx.fillStyle = "#000";
+          ctx.font = "bold " + size + "px monospace";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("C", coin.x, coin.y);
+        }
+
+        drawPixelFlag(ctx, finish) {
+          // Flag pole
+          ctx.fillStyle = "#C0C0C0";
+          ctx.fillRect(finish.x, finish.y, 4, finish.height);
+
+          // Flag
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(finish.x + 4, finish.y, 20, 12);
+
+          // Flag detail
+          ctx.fillStyle = "#FFFF00";
+          ctx.fillRect(finish.x + 6, finish.y + 2, 8, 4);
+        }
+
+        drawPixelPlayer(ctx, player) {
           ctx.save();
 
           if (!player.facingRight) {
@@ -948,78 +1236,45 @@
             ctx.translate(-(player.x + player.width / 2), 0);
           }
 
-          ctx.fillStyle = "#3498db";
-          ctx.fillRect(player.x, player.y, player.width, player.height);
+          // Calculate leg animation offset based on horizontal movement
+          const legAnimation =
+            Math.abs(player.vx) > 0.5 ? Math.sin(Date.now() / 100) * 4 : 0;
 
-          // Голова
-          ctx.fillStyle = "#2980b9";
-          ctx.beginPath();
-          ctx.arc(
-            player.x + player.width / 2,
-            player.y + 15,
-            12,
-            0,
-            Math.PI * 2
-          );
-          ctx.fill();
+          // Pixel art character - body parts as rectangles
+          // Body
+          ctx.fillStyle = "#3498DB"; // Blue shirt
+          ctx.fillRect(player.x, player.y + 16, player.width, 24);
 
-          // Глаза
-          ctx.fillStyle = "#fff";
-          ctx.beginPath();
-          ctx.arc(
-            player.x + player.width / 2 - 5,
-            player.y + 12,
-            3,
-            0,
-            Math.PI * 2
-          );
-          ctx.arc(
-            player.x + player.width / 2 + 5,
-            player.y + 12,
-            3,
-            0,
-            Math.PI * 2
-          );
-          ctx.fill();
+          // Head
+          ctx.fillStyle = "#FDCB6E"; // Skin tone
+          ctx.fillRect(player.x + 8, player.y, 16, 16);
 
-          // Тело
-          ctx.fillStyle = "#2980b9";
-          ctx.fillRect(
-            player.x + 5,
-            player.y + 25,
-            player.width - 10,
-            player.height - 30
-          );
+          // Eyes
+          ctx.fillStyle = "#2D3436";
+          ctx.fillRect(player.x + 10, player.y + 4, 3, 3);
+          ctx.fillRect(player.x + 19, player.y + 4, 3, 3);
 
-          // Ноги
-          ctx.fillStyle = "#21618c";
-          const legOffset = Math.sin(Date.now() / 100) * 3;
-          ctx.fillRect(player.x + 8, player.y + player.height - 15, 8, 15);
-          ctx.fillRect(
-            player.x + player.width - 16,
-            player.y + player.height - 15 + legOffset,
-            8,
-            15
-          );
+          // Legs with animation
+          ctx.fillStyle = "#E17055"; // Orange pants
+          // Left leg - animated
+          ctx.fillRect(player.x + 4, player.y + 40 + legAnimation, 8, 20);
+          // Right leg - opposite animation
+          ctx.fillRect(player.x + 20, player.y + 40 - legAnimation, 8, 20);
+
+          // Arms (slightly animated with movement)
+          ctx.fillStyle = "#3498DB"; // Same as shirt
+          ctx.fillRect(player.x, player.y + 20, 4, 12); // Left arm
+          ctx.fillRect(player.x + 28, player.y + 20, 4, 12); // Right arm
+
+          // Hat (optional pixel art detail)
+          ctx.fillStyle = "#E84393"; // Pink hat
+          ctx.fillRect(player.x + 6, player.y - 4, 20, 6);
 
           ctx.restore();
-
-          // UI поверх
-          ctx.fillStyle = "white";
-          ctx.font = "bold 16px Arial";
-          ctx.textAlign = "left";
-          ctx.textBaseline = "top";
-          ctx.fillText(
-            `Монеты: ${this.coinsCollected}/${this.totalCoins}`,
-            10,
-            10
-          );
-          ctx.fillText(`Уровень: ${this.currentLevel}`, 10, 35);
-          ctx.fillText(`Счет: ${this.score}`, 10, 60);
         }
       }
 
-      // Запуск при загрузке
+      // Запуск при за��рузке
       window.addEventListener("load", () => {
         console.log("Загружаем игру...");
         window.game = new SimpleGame();
